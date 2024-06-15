@@ -1,0 +1,22 @@
+{
+  "name": "capstone_server",
+  "version": "1.0.0",
+  "main": "seed-data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "knex migrate:latest",
+    "migrate:down": "knex migrate:down",
+    "migrate:rollback": "knex migrate:rollback",
+    "seed": "knex seed:run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "knex": "^3.1.0",
+    "mysql2": "^3.10.0"
+  },
+  "devDependencies": {},
+  "description": ""
+}
