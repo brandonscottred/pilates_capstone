@@ -1,84 +1,73 @@
 import "./RegisterForm.scss";
-import { useState } from 'react';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
 function RegisterForm() {
-    const [ formInput, setFormInput ] = useState({})
-    const [ newUser, setNewUser ] = useState({
-        username:"",
-        email:"",
-        password:"",
-    })
 
+    const formRef = useRef();
     const navigate = useNavigate();
 
-    const handleInput = (event) => {
-        event.preventDefault();
-        const { name, value } = event.target;
-        setFormInput({ ...formInput, [name]: value });
-    }
-
-    const handleSubmit = async (event) => {
-
+    const handleSubmit = (event) => {
         event.preventDefault();
 
-        try {
-            const registerNewUser = {
-                email: newUser.email,
-                username: newUser.username,
-                password: newUser.password,
-            }
-            const response = await axios.post(
-                `${baseUrl}/auth/register`,
-                registerNewUser
-            )
+        const form = formRef.current;
+        const email = form.email.value;
+        const username = form.username.value;
+        const password = form.password.value;
 
-            if (response.data.success) {
-                const { username, token } = response.data;
-                localStorage.setItem("jwt", token);
-                navigate(`/home/${username}`)
-            }
-            
-        } catch {
-
+        const registerNewUser = {
+            email: email,
+            username: username,
+            password: password,
         }
 
+        if (!email || !username || !password) { alert('All fields must be valid') } 
+
+        try {
+            axios.post(`${baseUrl}/auth/register`,registerNewUser)
+            .then(response => {
+            const { username, token } = response.data;
+            console.log(username, token)
+            localStorage.setItem("jwt", token);
+            navigate(`/home/${username}`);
+            alert(`${username} has successfully been registered`)
+            })
+        } catch (error) {
+            console.log('error submitting form')
+        }
     }
 
     return (
         <>
-            <form className="registerForm" onSubmit={handleSubmit}>
+            <form className="registerForm" ref={formRef}>
                 <div className="registerForm__fields">
                     <label htmlFor='email' className="registerForm__fields--label">Email</label>
                     <input 
                         className="registerForm__fields--input" 
                         name="email" 
                         placeholder="  Please enter your email address"
-                        value={newUser.email}
-                        onChange={handleInput} 
+                        type='text'
                     />
                     <label htmlFor='username' className="registerForm__fields--label">Username</label>
                     <input 
                         className="registerForm__fields--input" 
                         placeholder="  Choose a Username"
                         name="username" 
-                        value={newUser.username}
-                        onChange={handleInput} 
+                        type='text'
                     />
                     <label htmlFor='password' className="registerForm__fields--label">Password</label>
                     <input 
                         className="registerForm__fields--input" 
                         name="password" 
                         placeholder="  Choose a Password"
-                        value={newUser.password}
-                        onChange={handleInput} 
+                        type='text' 
                     />
                 </div>
                 <div className="registerForm__buttons">
-                    <button className="registerForm__buttons--submit" type='submit' onSubmit={handleSubmit}>
+                    <button className="registerForm__buttons--submit" type='submit' onClick={handleSubmit}>
                         <span>Register New User</span>
                     </button>
                 </div>

@@ -1,10 +1,10 @@
 import './App.scss';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage/LandingPage'
-import AuthPage from './pages/LandingPage/AuthPage'
+import AuthPage from './pages/AuthPage/AuthPage'
 import HomePage from './pages/HomePage/HomePage';
-import ExercisePage from './pages/HomePage/ExercisePage';
-import UploadPage from './pages/HomePage/UploadPage';
+import ExercisePage from './pages/ExercisePage/ExercisePage';
+import UploadPage from './pages/UploadMediaPage/UploadMediaPage';
 
 
 function App() {
