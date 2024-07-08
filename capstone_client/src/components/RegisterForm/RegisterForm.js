@@ -31,7 +31,7 @@ function RegisterForm() {
             .then(response => {
             const { username, token } = response.data;
             console.log(username, token)
-            localStorage.setItem("jwt", token);
+            sessionStorage.authToken = token;
             navigate(`/home/${username}`);
             alert(`${username} has successfully been registered`)
             })

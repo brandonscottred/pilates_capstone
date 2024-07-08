@@ -30,12 +30,12 @@ function LoginForm() {
             .then(response => {
             const { username, token } = response.data;
             console.log(username, token)
-            localStorage.setItem("jwt", token);
-            navigate(`/home/${username}`);
-            alert(`Welcome ${username}`)
+            sessionStorage.authToken = token;
+            sessionStorage.username = username;
+            navigate(`/${username}`);
             })
         } catch (error) {
-            console.log('error submitting form')
+            console.error('Login Failed', error.message)
         }
     }
 
