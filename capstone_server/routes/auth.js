@@ -13,18 +13,13 @@ router.post("/login", async (req, res) => {
 
     const { username, password} = req.body
 
-    if (!username) {
+    if (!username || !password) {
         return res.status(400).json({
-            message: 'Username required',
-        });
-    } else if (!password) {
-        return res.status(400).json({
-            message: 'Password required',
+            message: 'Username and Password are required',
         });
     }
 
     try {
-
         const user = await knex('users').where({ username }).first();
         if (!user) {
             return res.status(401).json({ message: 'User not found' })
@@ -40,6 +35,7 @@ router.post("/login", async (req, res) => {
         return res.status(201).json({
             success: true,
             message: 'User Logged In',
+            username: user.username,
             token,
         });
 
@@ -53,7 +49,6 @@ router.post("/login", async (req, res) => {
 
 // Register
 router.post("/register", async (req, res) => {
-
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
@@ -72,7 +67,6 @@ router.post("/register", async (req, res) => {
         }
 
         const hashPassword = await bcrypt.hash(password, 10)
-
         await knex('users').insert({
             username,
             email,
@@ -81,12 +75,13 @@ router.post("/register", async (req, res) => {
 
         const newUser = await knex('users').where({ email }).first();
 
-        const token = jwt.sign({ email: newUser.email }, ACCESS_TOKEN_SECRET, { expiresIn: JWT_EXPIRY });
+        const token = jwt.sign({ username: newUser.username }, ACCESS_TOKEN_SECRET, { expiresIn: JWT_EXPIRY });
 
         return res.status(201).json({
             success: true,
             message: 'Registered New User',
             token,
+            username: newUser.username,
         });
     } catch (err) {
         console.error(err);

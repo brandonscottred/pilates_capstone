@@ -1,3 +1,7 @@
+### App Setup
+- create schema for local database- pilates_capstone
+
+
 Pilates Capstone
 ## Overview
 
