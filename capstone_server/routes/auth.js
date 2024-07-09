@@ -36,6 +36,7 @@ router.post("/login", async (req, res) => {
             success: true,
             message: 'User Logged In',
             username: user.username,
+            user_id: user.user_id,
             token,
         });
 

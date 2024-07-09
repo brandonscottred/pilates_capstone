@@ -11,8 +11,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to='/auth' />} />
         <Route path="/auth" element={<AuthPage/>} />
-        <Route path="/:username" element={<HomePage/>} />
-        <Route path="/:username/:exerciseId" element={<HomePage />} />
+        <Route path="/home/:username" element={<HomePage/>} />
+        <Route path="/home/:username/:exerciseId" element={<HomePage />} />
         <Route path="/upload/:username" element={<UploadPage/>} />
       </Routes>
     </BrowserRouter>

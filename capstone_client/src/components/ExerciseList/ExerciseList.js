@@ -1,7 +1,5 @@
 import "./ExerciseList.scss"
-import { useState, useEffect } from 'react'; 
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios'
 
 function ExerciseList({ exerciseList }) {
     const { username } = useParams()
@@ -14,7 +12,7 @@ function ExerciseList({ exerciseList }) {
                 {exerciseList.map((exerciseList) => {
                 return (
                     <div className='exerciselist' key={exerciseList.exercise_id}  >
-                        <Link className='link' to={`/${username}/${exerciseList.exercise_id}`} onClick={window.scroll(0,0)}>
+                        <Link className='link' to={`/home/${username}/${exerciseList.exercise_id}`} onClick={window.scroll(0,0)}>
                             <img alt='' className='exerciselist__image' src={exerciseList.image} />
                         </Link>
                         <div className='exerciselist__info'>

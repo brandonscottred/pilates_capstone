@@ -1,7 +1,12 @@
 import "./HeroExercise.scss"
 
 function HeroExercise({ mainExercise }) {
+
     const image = mainExercise.image;
+
+    if (!mainExercise) {
+        return <p>... is Loading</p>
+    }
 
     return (
         <>

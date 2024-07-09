@@ -11,35 +11,12 @@ const token = sessionStorage.getItem("authToken");
 
 function HomePage() {
 
-    const { username, exerciseId } = useParams()
-    const [mainExercise, setMainExercise] = useState({ mainExercise: null });
-    const [exerciseList, setExerciseList] = useState({ exerciseList: [] })
-    const [comments, setComments] = useState({ comments: [] })
+    const { username } = useParams()
+    const [exerciseId, setExerciseId] = useState(null)
+    const [mainExercise, setMainExercise] = useState({});
+    const [exerciseList, setExerciseList] = useState([])
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    const fetchExerciseList = () => {
-        axios.get(`${baseUrl}/exercises`, 
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        )
-        .then((response) => {
-            setExerciseList({ exerciseList: response.data });
-            const heroId = response.data[0].exercise_id;
-            if (heroId) {
-                fetchMainExercise(heroId);
-            } else {
-                setLoading(false);
-            }
-        })
-        .catch((error) => {
-            console.error('Error fetching exercises:', error);
-            setError('Error fetching exercises. Please try again later.');
-        })
-    }
 
     const fetchMainExercise = (exerciseId) => {
         axios.get(`${baseUrl}/exercises/${exerciseId}`,
@@ -49,43 +26,58 @@ function HomePage() {
             },
         })
         .then((response) => {
-            setMainExercise({ mainExercise: response.data })
+            console.log(response)
+            setMainExercise(response.data)
+            setExerciseId(response.data.exercise_id)
+            setLoading(false)
         })
+        return exerciseId;
     }
 
-    const fetchComments = async () => {
-        try {
-            const response = await axios.get(`${baseUrl}/exercises/${exerciseId}/comments`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            console.log(response.data)
-        } catch (error) {
-            console.error('Error fetching comments:', error);
-            setError('Error fetching comments. Please try again later.');
-            setLoading(false);
-        }
-    };
 
 
     useEffect(() => {
+
+        const fetchExerciseList = () => {
+            axios.get(`${baseUrl}/exercises`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            )
+            .then((response) => {
+                console.log(response)
+                setExerciseList(response.data);
+                const heroId = response.data[0].exercise_id;
+                if (heroId) {
+                    fetchMainExercise(heroId);
+                } else {
+                    setLoading(false);
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching exercises:', error);
+                setError('Error fetching exercises. Please try again later.');
+                setLoading(false);
+            })
+        }
+
         fetchExerciseList();
-    }, [token]);
+    }, [username]);
 
 
     useEffect(() => {
         if(exerciseId) {
             fetchMainExercise(exerciseId); 
-            fetchComments(exerciseId)
         }
-    }, [exerciseId, token]);
+    }, [exerciseId]);
 
     useEffect(() => {
-        if (mainExercise.mainExercise !== null) {
+        if (mainExercise.length > 1) {
             setLoading(false);
         }
-    }, [mainExercise]);
+    }, [exerciseId]);
 
     if (loading) {
         return <p>Loading...</p>;
@@ -98,9 +90,9 @@ function HomePage() {
     return (
         <>
             <h1>Welcome {username}</h1>
-            <HeroExercise mainExercise={mainExercise.mainExercise} />
-            <Comments comments={comments.comments} />
-            <ExerciseList exerciseList={exerciseList.exerciseList} />
+            <HeroExercise mainExercise={mainExercise} />
+            <Comments />
+            <ExerciseList exerciseList={exerciseList} />
         </>
     )
 }

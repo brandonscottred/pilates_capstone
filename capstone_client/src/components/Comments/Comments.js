@@ -13,45 +13,67 @@ function formatDate(timestamp) {
 
 const baseUrl = process.env.REACT_APP_BASE_URL;
 const token = sessionStorage.getItem("authToken");
+const user_id = sessionStorage.getItem("user_id");
 
-function Commments({ comments }) {
-     const { username, exerciseId } = useParams();
+function Commments() {
+     const { exerciseId, username } = useParams();
 
-     const postComment = (exerciseId) => {
-        axios.post(`${baseUrl}/exercises/${exerciseId}/comments`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
+     const [comment, setComment] = useState([])
+
+    const formRef = useRef();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const form = formRef.current;
+        const comment = form.comment.value;
+
+        const data = {
+            "comment_text": comment,
+            "exercise_id": exerciseId,
+            "user_id": user_id
+        }
+
+        axios.post(`${baseUrl}/exercises/${exerciseId}/comments`, data,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
         .then((response) => {
-
+            setComment(...comment, response.data)
+            form.reset()
         })
     }
 
 
+
     return(
         <>
-        <div className='comments'>
-            <form className="comments__form" id="commentsForm" action="" >
-                <label className="comments__form--label" htmlFor="comment">JOIN THE CONVERSATION</label>
-                <textarea className="comments__form--comment" name="comment" id="comment" placeholder=" Add a new comment" type="text"></textarea>
-                <div className='comments__form--cta'>
-                    <input className="comments__form--cta-comment" type="submit" value="COMMENT"/>
+        <div className='comment'>
+            <form className="comment__form" id="commentsForm" method="POST" >
+                <label className="comment__form--label" htmlFor="comment">JOIN THE CONVERSATION</label>
+                <textarea className="comment__form--comment" name="comment" id="comment" placeholder=" Add a new comment" type="text"></textarea>
+                <div className='comment__form--cta'>
+                    <input onClick={handleSubmit} className="comments__form--cta-comment" type="submit" value="COMMENT"/>
                 </div>
             </form>
         </div>
-        <div>
-            <h1>Comments for Exercise</h1>
-            {comments.length > 0 ? (
-                <ul>
-                    {comments.map((comment) => (
-                        <li key={comment.comment_id}>{comment.comment_text}</li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No comments yet. Be the first to post!</p>
-            )}
+        <div className="comments">
+            <h1 className="comments__title">Comments for Exercise</h1>
+            {comment.length > 0 ? (
+            <div className='comments__list' >
+                {comment.map((comments) => (
+                    <div className='comments__list--container'>
+                        <p>{username}</p>
+                        <p>{formatDate(comments.current_date)}</p>
+                        <p>{comments.comment_text}</p>
+                    </div>
+                ))}
+            </div>
+        ) : (
+            <p>No comments yet. Be the first to post!</p>
+        )}
+
         </div>
         </>
     )
