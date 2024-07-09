@@ -1,6 +1,5 @@
 import './App.scss';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './pages/LandingPage/LandingPage'
 import AuthPage from './pages/AuthPage/AuthPage'
 import HomePage from './pages/HomePage/HomePage';
 import UploadPage from './pages/UploadMediaPage/UploadMediaPage';

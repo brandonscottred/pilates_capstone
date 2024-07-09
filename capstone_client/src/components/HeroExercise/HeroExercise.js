@@ -1,12 +1,7 @@
 import "./HeroExercise.scss"
-import { useState, useEffect } from 'react'; 
-import { useParams } from 'react-router-dom';
-import axios from 'axios'
 
 function HeroExercise({ mainExercise }) {
-    const { exerciseId } = useParams()
     const image = mainExercise.image;
-    console.log(image)
 
     return (
         <>
@@ -18,10 +13,6 @@ function HeroExercise({ mainExercise }) {
             </div>
             <div className="exercise__hero">
                 <img src={image} alt='' className="exercise__hero--img" />
-            </div>
-
-            <div className="exercise__comments">
-
             </div>
         </section>
         </>
