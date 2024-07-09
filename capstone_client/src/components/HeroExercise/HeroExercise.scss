@@ -1,0 +1,27 @@
+@import "../../styles/partials/mixins";
+@import "../../styles/partials/typography";
+@import "../../styles/partials/variables";
+
+.exercise {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    &__info {
+        text-align: right;
+        width: 20%;
+
+        &--description {
+            
+        }
+    }
+
+    &__hero {
+        width: 50%;
+
+        &--img {
+            border-radius: 5%;
+            width: 100%;
+        }
+    }
+}
