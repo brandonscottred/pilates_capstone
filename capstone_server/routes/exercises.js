@@ -54,7 +54,7 @@ router.get("/:id/comments", authenticateToken, async (req, res) => {
         if (allComments) {
             res.status(200).json(allComments);
         } else {
-            res.status(404).json(`Comments under exercise id: ${exerciseId} not found`);
+            res.status(405).json(`Comments under exercise id: ${exerciseId} not found`);
         }
     } catch (err) {
             res.status(500).send(`Error retrieving comments: ${err}`);

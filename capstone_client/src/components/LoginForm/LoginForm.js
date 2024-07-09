@@ -28,11 +28,16 @@ function LoginForm() {
         try {
             axios.post(`${baseUrl}/auth/login`, loginUser)
             .then(response => {
-            const { username, token } = response.data;
-            console.log(username, token)
+
+            const { username, token, user_id } = response.data;
+
+            console.log(username, token, user_id)
+
             sessionStorage.authToken = token;
             sessionStorage.username = username;
-            navigate(`/${username}`);
+            sessionStorage.user_id = user_id;
+
+            navigate(`/home/${username}/105`);
             })
         } catch (error) {
             console.error('Login Failed', error.message)
