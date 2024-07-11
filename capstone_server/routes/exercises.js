@@ -45,16 +45,18 @@ router.get("/:id", authenticateToken, async (req, res) => {
     }
 });
 
+
+
+
 // Comments ENDPOINTS
 router.get("/:id/comments", authenticateToken, async (req, res) => {
     try {
-        const commentsTable = await knex('comments');
         const exerciseId = req.params.id;
-        const allComments = commentsTable.find((allComments) => allComments.exercise_id == exerciseId);
-        if (allComments) {
+        const allComments = await knex('comments').where({ exercise_id: exerciseId})
+        if (allComments.length > 0) {
             res.status(200).json(allComments);
         } else {
-            res.status(405).json(`Comments under exercise id: ${exerciseId} not found`);
+            res.status(404).json(`Comments under exercise id: ${exerciseId} not found`);
         }
     } catch (err) {
             res.status(500).send(`Error retrieving comments: ${err}`);
@@ -63,7 +65,6 @@ router.get("/:id/comments", authenticateToken, async (req, res) => {
 
 router.post("/:id/comments", authenticateToken, async (req, res) => {
     try {
-        const commentsTable = await knex('comments');        
 
         const {
             exercise_id,
@@ -85,16 +86,103 @@ router.post("/:id/comments", authenticateToken, async (req, res) => {
                 .json({ error: `Missing properties: ${missingProps.join(", ")}` })
         }
 
-        insertedComment = commentsTable.insert({
+        const insertedComment = await knex('comments').insert({
             exercise_id,
             user_id,
             comment_text
         });
-
-        res.status(201).json({ message: "Comment posted successfully", comment: insertedComment });
-
+        
+        if(insertedComment) {
+            res.status(201).json({ message: "Comment posted successfully" });
+        } else {
+            res.status(404).json(`Exercise with id ${exercise_id} not found.`);
+        }
     } catch (err) {
         res.status(500).send(`Error posting comment: ${err}`);
+    }
+});
+
+router.put("/:id/comments", authenticateToken, async (req, res) => {
+    try {
+
+        const exercise_id = req.params.id
+
+        const {
+            comment_text,
+            comment_id,
+            user_id,
+        } = req.body;
+
+        const requiredProps = [
+            "comment_text",
+            "comment_id",
+            "user_id",
+        ];
+
+        const missingProps = requiredProps.filter
+        ((prop) => !req.body.hasOwnProperty(prop));
+        if (missingProps.length > 0) {
+            return res
+                .status(400)
+                .json({ error: `Missing properties: ${missingProps.join(", ")}` })
+        }
+
+        const updatedComment = await knex('comments')
+        .where({
+            comment_id: comment_id,
+            user_id: user_id,
+            exercise_id: exercise_id
+        })
+        .update({
+            comment_text
+        });
+
+        if(updatedComment) {
+            res.status(201).json({ message: "Comment updated successfully" });
+        } else {
+            res.status(404).json(`Comment with id ${comment_id} not found.`);
+        }
+    } catch (err) {
+        res.status(500).send(`Error posting comment: ${err}`);
+    }
+});
+
+router.delete("/:id/comments", authenticateToken, async (req, res) => {
+    try {
+        const exercise_id = req.params.id;
+
+        const {
+            comment_id,
+            user_id,
+        } = req.body;
+
+        const requiredProps = [
+            "comment_id",
+            "user_id",
+        ];
+
+        const missingProps = requiredProps.filter
+        ((prop) => !req.body.hasOwnProperty(prop));
+        if (missingProps.length > 0) {
+            return res
+                .status(400)
+                .json({ error: `Missing properties: ${missingProps.join(", ")}` })
+        }
+
+        const commentExists = await knex("comments")
+            .where({
+                comment_id: comment_id,
+                user_id: user_id,
+                exercise_id: exercise_id
+            }).del();
+
+        if (commentExists) {
+            res.status(201).json({ message: `Comment with id ${comment_id} successfully deleted`});
+        } else {
+            res.status(404).json({ error: `Comment with id ${comment_id} could not be deleted because it does not exist.` });
+        }
+    } catch {
+        res.status(500).json({ error: `Error deleting comment: ${comment_id}` });
     }
 });
 
