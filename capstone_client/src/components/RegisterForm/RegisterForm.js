@@ -32,7 +32,7 @@ function RegisterForm() {
             const { username, token } = response.data;
             console.log(username, token)
             sessionStorage.authToken = token;
-            navigate(`/home/${username}/105`);
+            navigate(`/home/${username}`);
             alert(`${username} has successfully been registered`)
             })
         } catch (error) {

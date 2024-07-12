@@ -2,3 +2,48 @@
 @import "../../styles/partials/typography";
 @import "../../styles/partials/variables";
 
+.login-form,
+.register-form {
+  margin-bottom: 20px;
+  
+  &__fields {
+    .form-field {
+      margin-bottom: 15px;
+      
+      &--label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      
+      &--input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 4px;
+        box-sizing: border-box;
+        
+        &:focus {
+          outline: #f8f9fa;
+        }
+      }
+    }
+  }
+  
+  &__buttons {
+    text-align: center;
+    
+    &--submit {
+      padding: 10px 20px;
+      font-size: 1rem;
+      color: #f8f9fa;
+      border: none;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+      
+      &:hover {
+        background-color: darken(#f8f9fa, 10%);
+      }
+    }
+  }
+}

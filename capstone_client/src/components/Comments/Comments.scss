@@ -1,0 +1,45 @@
+@import "../../styles/partials/mixins";
+@import "../../styles/partials/typography";
+@import "../../styles/partials/variables";
+
+.comment {
+
+    &__form {
+        display: flex;
+        font-size: 1.5rem;
+        justify-content: space-evenly;
+        flex-direction: column;
+        padding: 1rem;
+
+        &--comment {
+            max-width: 25%;
+            min-height: 100px;
+            margin: 1rem 0;
+        }
+
+        &--cta {
+
+            &-comment {
+                min-height: 25px;
+                font-size: 1rem;
+                padding: 0.5rem;
+                border-radius: 5px;
+                color: white;
+                background-color: rgba(16, 113, 140, 0.325);
+            }
+
+        }
+    }
+}
+
+.comments {
+    padding: 1rem;
+
+    &__title {
+        
+    }
+
+    &__list {
+        font-size: 1.5rem;
+    }
+}

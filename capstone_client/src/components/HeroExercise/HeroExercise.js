@@ -1,12 +1,8 @@
 import "./HeroExercise.scss"
 
-function HeroExercise({ mainExercise }) {
+function HeroExercise(props) {
 
-    const image = mainExercise.image;
-
-    if (!mainExercise) {
-        return <p>... is Loading</p>
-    }
+    const mainExercise = props.mainExercise[0];
 
     return (
         <>
@@ -17,7 +13,7 @@ function HeroExercise({ mainExercise }) {
                 <p className='exercise__info--description'>{mainExercise.description}</p>
             </div>
             <div className="exercise__hero">
-                <img src={image} alt='' className="exercise__hero--img" />
+                <img src={mainExercise.image} alt='' className="exercise__hero--img" />
             </div>
         </section>
         </>

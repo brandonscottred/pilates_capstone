@@ -23,7 +23,9 @@ function LoginForm() {
             password: password,
         }
 
-        if (!username || !password) { alert('All fields must be valid') } 
+        if (!username || !password) {
+             return alert('All fields must be valid') 
+        } 
 
         try {
             axios.post(`${baseUrl}/auth/login`, loginUser)
@@ -37,7 +39,7 @@ function LoginForm() {
             sessionStorage.username = username;
             sessionStorage.user_id = user_id;
 
-            navigate(`/home/${username}/105`);
+            navigate(`/home/${username}`);
             })
         } catch (error) {
             console.error('Login Failed', error.message)
