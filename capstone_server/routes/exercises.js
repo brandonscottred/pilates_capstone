@@ -17,8 +17,8 @@ function authenticateToken(req, res, next) {
 // Exercises ENDPOINTS
 router.get("/", authenticateToken, async (req, res) => {
     try {
-        const exercises = await knex('exercises');
-        if (exercises) {
+        const exercises = await knex('exercises').select("*");
+        if (exercises.length > 1) {
             res.status(200).json(exercises);
         } else {
             res.status(400).json({
@@ -32,11 +32,10 @@ router.get("/", authenticateToken, async (req, res) => {
 
 router.get("/:id", authenticateToken, async (req, res) => {
     try {
-        const exercises = await knex('exercises');
         const exerciseId = req.params.id;
-        const exercise = exercises.find((exercise) => exercise.exercise_id == exerciseId);
+        const exercise = await knex('exercises').where({ exercise_id: exerciseId });
         if (exercise) {
-            res.json(exercise);
+            res.status(200).json(exercise);
         } else {
             res.status(404).json(`Exercise id: ${exerciseId} does not exist`);
         }
@@ -54,7 +53,7 @@ router.get("/:id/comments", authenticateToken, async (req, res) => {
         const exerciseId = req.params.id;
         const allComments = await knex('comments').where({ exercise_id: exerciseId})
         if (allComments.length > 0) {
-            res.status(200).json(allComments);
+            return res.status(200).json(allComments);
         } else {
             res.status(404).json(`Comments under exercise id: ${exerciseId} not found`);
         }
@@ -93,7 +92,9 @@ router.post("/:id/comments", authenticateToken, async (req, res) => {
         });
         
         if(insertedComment) {
-            res.status(201).json({ message: "Comment posted successfully" });
+            return res.status(201).json({ 
+                message: `Comment successfully created`
+             });
         } else {
             res.status(404).json(`Exercise with id ${exercise_id} not found.`);
         }
@@ -138,7 +139,10 @@ router.put("/:id/comments", authenticateToken, async (req, res) => {
         });
 
         if(updatedComment) {
-            res.status(201).json({ message: "Comment updated successfully" });
+            return res.status(201).json({ 
+                message: `Comment successfully updated`
+
+             });
         } else {
             res.status(404).json(`Comment with id ${comment_id} not found.`);
         }
@@ -177,7 +181,7 @@ router.delete("/:id/comments", authenticateToken, async (req, res) => {
             }).del();
 
         if (commentExists) {
-            res.status(201).json({ message: `Comment with id ${comment_id} successfully deleted`});
+            return res.status(201).json({ message: `Comment with id ${comment_id} successfully deleted`});
         } else {
             res.status(404).json({ error: `Comment with id ${comment_id} could not be deleted because it does not exist.` });
         }
