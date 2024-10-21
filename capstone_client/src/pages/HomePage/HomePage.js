@@ -77,7 +77,7 @@ function HomePage() {
     useEffect(() => {
         if (exerciseId) {
             fetchMainExercise(exerciseId)
-            // fetchExerciseComments(exerciseId)
+            fetchExerciseComments(exerciseId)
         }
     }, [exerciseId])
 
